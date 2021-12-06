@@ -20,44 +20,54 @@ Route::get('/', \App\Http\Controllers\IndexController::class)->name('index');
 
 Route::get('page/{page:slug}', \App\Http\Controllers\PageController::class)->name('page.show');
 
-Route::get('/catalog/index', [\App\Http\Controllers\CatalogController::class, 'index'])->name('catalog.index');
-Route::get('/catalog/category/{category:slug}', [\App\Http\Controllers\CatalogController::class, 'category'])->name('catalog.category');
-Route::get('/catalog/brand/{brand:slug}', [\App\Http\Controllers\CatalogController::class, 'brand'])->name('catalog.brand');
-Route::get('/catalog/product/{product:slug}', [\App\Http\Controllers\CatalogController::class, 'product'])->name('catalog.product');
+Route::group([
+    'as' => 'catalog.',
+    'prefix' => 'catalog',
+], function () {
+    Route::get('index', [\App\Http\Controllers\CatalogController::class, 'index'])
+        ->name('index');
+    Route::get('category/{category:slug}', [\App\Http\Controllers\CatalogController::class, 'category'])
+        ->name('category');
+    Route::get('brand/{brand:slug}', [\App\Http\Controllers\CatalogController::class, 'brand'])
+        ->name('brand');
+    Route::get('product/{product:slug}', [\App\Http\Controllers\CatalogController::class, 'product'])
+        ->name('product');
+    Route::get('search', [\App\Http\Controllers\CatalogController::class, 'search'])
+        ->name('search');
+}
+);
 
+Route::group([
+    'as' => 'basket.',
+    'prefix' => 'basket',
+], function () {
+    Route::get('index', [\App\Http\Controllers\BasketController::class, 'index'])
+        ->name('index');
+    Route::get('checkout', [\App\Http\Controllers\BasketController::class, 'checkout'])
+        ->name('checkout');
+    Route::post('add/{id}', [\App\Http\Controllers\BasketController::class, 'add'])
+        ->where('id', '[0-9]+')
+        ->name('add');
+    Route::post('plus/{id}', [\App\Http\Controllers\BasketController::class, 'plus'])
+        ->where('id', '[0-9]+')
+        ->name('plus');
+    Route::post('minus/{id}', [\App\Http\Controllers\BasketController::class, 'minus'])
+        ->where('id', '[0-9]+')
+        ->name('minus');
+    Route::post('remove/{id}', [\App\Http\Controllers\BasketController::class, 'remove'])
+        ->where('id', '[0-9]+')
+        ->name('remove');
+    Route::post('clear', [\App\Http\Controllers\BasketController::class, 'clear'])
+        ->name('clear');
+    Route::post('saveorder', [\App\Http\Controllers\BasketController::class, 'saveOrder'])->name('saveorder');
+    Route::get('success', [\App\Http\Controllers\BasketController::class, 'success'])
+        ->name('success');
+    Route::post('profile', [\App\Http\Controllers\BasketController::class, 'profile'])
+        ->name('profile');
 
-Route::get('/basket/index', [\App\Http\Controllers\BasketController::class, 'index'])->name('basket.index');
-Route::get('/basket/checkout', [\App\Http\Controllers\BasketController::class, 'checkout'])->name('basket.checkout');
-
-Route::post('/basket/add/{id}', [\App\Http\Controllers\BasketController::class, 'add'])
-    ->where('id', '[0-9]+')
-    ->name('basket.add');
-
-Route::post('basket/plus/{id}', [\App\Http\Controllers\BasketController::class, 'plus'])
-    ->where('id', '[0-9]+')
-    ->name('basket.plus');
-
-Route::post('basket/minus/{id}', [\App\Http\Controllers\BasketController::class, 'minus'])
-    ->where('id', '[0-9]+')
-    ->name('basket.minus');
-
-Route::post('basket/remove/{id}', [\App\Http\Controllers\BasketController::class, 'remove'])
-    ->where('id', '[0-9]+')
-    ->name('basket.remove');
-
-Route::post('basket/clear', [\App\Http\Controllers\BasketController::class, 'clear'])
-    ->name('basket.clear');
-
-Route::post('/basket/saveorder', [\App\Http\Controllers\BasketController::class, 'saveOrder'])->name('basket.saveorder');
-
-Route::get('/basket/success', [\App\Http\Controllers\BasketController::class, 'success'])
-    ->name('basket.success');
-
-Route::post('/basket/profile', [\App\Http\Controllers\BasketController::class, 'profile'])
-    ->name('basket.profile');
+});
 
 Route::name('user.')->prefix('user')->group(function () {
-    //Route::get('index', [\App\Http\Controllers\UserController::class, 'index'])->name('index');
     Auth::routes();
 });
 
@@ -105,5 +115,3 @@ Route::group([
     Route::get('order/{order}', [\App\Http\Controllers\OrderController::class, 'show'])
         ->name('order.show');
 });
-
-

@@ -31,8 +31,8 @@
                 @include('layout.part.pages')
             </ul>
             <!-- Этот блок расположен справа -->
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search"
+            <form action="{{route('catalog.search')}}" class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" name="query"
                        placeholder="Поиск по каталогу" aria-label="Search">
                 <button class="btn btn-outline-info my-2 my-sm-0"
                         type="submit">Искать
